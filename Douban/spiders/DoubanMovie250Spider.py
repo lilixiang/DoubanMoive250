@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+
 '''
 
 '''
@@ -17,15 +18,17 @@ class DoubanMovie250Spider(CrawlSpider):
     start_urls = [ 'http://movie.douban.com/top250' ]
     def parse(self, response):
         movie250 = DoubanItem()
-        for sel in response.xpath('//ol[@class="grid_view"]/li'):
-            movie250['rate'] = sel.xpath('//div[@class="pic"]/em/text()').extract()
-            movie250['link'] = sel.xpath('//div[@class="pic"]/a/@href').extract()
-            movie250['cover'] = sel.xpath('//div[@class="pic"]/a/img/@src').extract()
-            movie250['title_cn'] = sel.xpath('//div[@class="hd"]/a/span[1]/text()').extract()
-            movie250['title_en'] = sel.xpath('//div[@class="hd"]/a/span[2]/text()').extract()
-            movie250['title_other'] = sel.xpath('//div[@class="hd"]/a/span[3]/text()').extract()
-            movie250['introduction'] = sel.xpath('//div[@class="bd"]/p/text()').extract()
-            movie250['star'] = sel.xpath('//div[@class="star"]/span[1]/em/text()').extract()
-            movie250['value_p'] = sel.xpath('//div[@class="star"]/span[2]/text()').extract()
-            movie250['quote'] = sel.xpath('//p[@class="quote"]/span[@class="inq"]/text()').extract()
+        results = response.xpath('//ol[@class="grid_view"]/li/div[@class="item"]')
+        for result in results :
+            movie250['rate'] = result.xpath('div[@class="pic"]/em/text()').extract()
+            movie250['link'] = result.xpath('div[@class="pic"]/a/@href').extract()
+            movie250['cover'] = result.xpath('div[@class="pic"]/a/img/@src').extract()
+            movie250['title_cn'] = result.xpath('*/div[@class="hd"]/a/span[1]/text()').extract()
+            movie250['title_en'] = result.xpath('*/div[@class="hd"]/a/span[2]/text()').extract()
+            movie250['title_other'] = result.xpath('*/div[@class="hd"]/a/span[3]/text()').extract()
+            movie250['introduction'] = result.xpath('*/div[@class="bd"]/p/text()').extract()
+            movie250['star'] = result.xpath('*/div[@class="bd"]/div[@class="star"]/span[1]/em/text()').extract()
+            movie250['value_p'] = result.xpath('*/div[@class="bd"]/div[@class="star"]/span[2]/text()').extract()
+            movie250['quote'] = result.xpath('*/div[@class="bd"]/p[@class="quote"]/span[@class="inq"]/text()').extract() 
+            #print  movie250['quote']
             yield movie250
