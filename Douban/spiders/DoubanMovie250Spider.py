@@ -30,5 +30,5 @@ class DoubanMovie250Spider(CrawlSpider):
             movie250['star'] = result.xpath('*/div[@class="bd"]/div[@class="star"]/span[1]/em/text()').extract()
             movie250['value_p'] = result.xpath('*/div[@class="bd"]/div[@class="star"]/span[2]/text()').extract()
             movie250['quote'] = result.xpath('*/div[@class="bd"]/p[@class="quote"]/span[@class="inq"]/text()').extract() 
-            #print  movie250['quote']
+
             yield movie250
