@@ -9,7 +9,9 @@ from scrapy.http import  Request
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.contrib.loader import ItemLoader
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+
 from Douban.items import DoubanItem
+import urlparse,scrapy
 
 class DoubanMovie250Spider(CrawlSpider):
   # name of spiders
@@ -32,3 +34,8 @@ class DoubanMovie250Spider(CrawlSpider):
             movie250['quote'] = result.xpath('*/div[@class="bd"]/p[@class="quote"]/span[@class="inq"]/text()').extract() 
 
             yield movie250
+        next_page = response.xpath('//*[@id="content"]//div[@class="paginator"]/span[@class="next"]/link/@href').extract()
+        
+        if next_page:            
+            next_page = urlparse.urljoin(u'http://movie.douban.com/top250',next_page[0])
+            yield Request(next_page, callback=self.parse)
